@@ -12,20 +12,20 @@ import os
 import algorithm
 
 suite "test basic":
-  var temp:string
-  var files:seq[string]
+  var temp: string
+  var files: seq[string]
   setup:
     temp = mkdtemp("exts")
-    files = @[ temp / "a.scss" , temp / "a.jpg" , temp / "a.png"]
+    files = @[temp / "a.scss", temp / "a.jpg", temp / "a.png"]
     for f in files:
-      writeFile( f ,"")
+      writeFile(f, "")
   teardown:
     # for f in files:
     #   removeFile(f)
     removeDir(temp)
   test "can get list of extensions":
-    check getExts(temp).sorted == @[".jpg",".scss",".png"].sorted
+    check getExts(temp).sorted == @[".jpg", ".scss", ".png"].sorted
   test "can get list of pkgs":
     check getDeps(temp).sorted == @["nim-sass"].sorted
-    
-    
+
+
