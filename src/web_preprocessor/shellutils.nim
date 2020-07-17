@@ -1,4 +1,5 @@
 import os
+import osproc
 
 const currentDir = currentSourcePath.parentDir()
 
@@ -16,6 +17,12 @@ proc compileProjectFile*(file:string):string =
   let abs = currentDir / file
   result = toBin( abs )
   exec("nim c -d:release " & abs )
+
+proc runProcessor*(name:string,args:string): (string,int) =
+  let oName = currentDir / "processors" / name
+  let binName = toBin(oName)
+  # os.execShellCmd( binName & " " & args)
+  execCmdEx( binName & " " & args )
 
 proc compileProcessor*(name:string ):string = 
   compileProjectFile( "processors" / name & ".nim" )

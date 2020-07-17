@@ -5,10 +5,11 @@ author        = "bung87"
 description   = "A new awesome nimble package"
 license       = "MIT"
 srcDir        = "src"
-
+bin = @["web_preprocessor"]
 
 
 # Dependencies
 
 requires "nim >= 1.3.5"
 requires "stage"
+requires "cligen"
