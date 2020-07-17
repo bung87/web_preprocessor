@@ -38,14 +38,14 @@ proc isInstalled*(pkgUriOrName: string, pkgs: seq[string]): bool =
   let pkgName = pathToValidPackageName(pkgUriOrName)
   pkgName in pkgs
 
-proc processExtTable(tbl:var Table[string,seq[string]],ext:string,rel:string) = 
+proc processExtTable(tbl: var Table[string, seq[string]], ext: string, rel: string) =
   if tbl.hasKey(ext):
     tbl[ext].add rel
   else:
     tbl[ext] = @[rel]
 
 
-proc main(srcDir,destDir:string) =
+proc main(srcDir, destDir: string) =
   let deps = getDeps()
   let notInstalled = deps.filterIt(not isInstalled(it))
   if notInstalled.len > 0:
@@ -58,7 +58,7 @@ proc main(srcDir,destDir:string) =
       discard compileProcessor(name)
   let srcDir = getCurrentDir() / "tests" / "static"
   var dir, name, ext: string
-  var extTable: Table[string,seq[string]]
+  var extTable: Table[string, seq[string]]
   var manifest: Table[string, string]
   if not fileExists("manifest.json"):
     var f = open("manifest.json", fmWrite)
@@ -66,7 +66,7 @@ proc main(srcDir,destDir:string) =
     for path in walkDirRec(srcDir):
       (dir, name, ext) = splitFile(path)
       rel = relativePath(path, getCurrentDir())
-      processExtTable(extTable,ext,rel)
+      processExtTable(extTable, ext, rel)
       manifest[rel] = getMD5(readFile(path))
     let output = pretty(%*manifest)
     f.write(output)
@@ -80,14 +80,14 @@ proc main(srcDir,destDir:string) =
       (dir, name, ext) = splitFile(path)
       rel = relativePath(path, getCurrentDir())
       if manifest[rel] != getMD5(readFile(path)):
-        processExtTable(extTable,ext,rel)
+        processExtTable(extTable, ext, rel)
 
   debugEcho "manifest:" & $manifest
   debugEcho "ext table:" & $extTable
 
-  for k,v in extTable:
+  for k, v in extTable:
     if k in ext2pro: # need process
-      let (output,exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} " & v.join(" "))
+      let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} " & v.join(" "))
       debugEcho output
   if currentSourcePath.parentDir().parentDir() == getCurrentDir():
     removeFile("manifest.json")
