@@ -2,6 +2,7 @@ import tables
 import os
 import sequtils
 import strutils
+import algorithm
 import web_preprocessor/fileutils
 import web_preprocessor/shellutils
 import web_preprocessor/pkgutils
@@ -26,6 +27,13 @@ proc getDeps*(dir: string = getCurrentDir()): seq[string] =
     if ext in pkgDeps:
       result.add pkgDeps[ext]
 
+proc getDeps*(files:seq[string]): seq[string] =
+  ## get all dependencies throght files extensions.
+  let exts = getExts(files)
+  for ext in exts:
+    if ext in pkgDeps:
+      result.add pkgDeps[ext]
+
 proc installDeps*(dir: string = getCurrentDir(), deps = getDeps(dir)) =
   install(deps)
 
@@ -45,8 +53,9 @@ proc processExtTable(tbl: var Table[string, seq[string]], ext: string, rel: stri
     tbl[ext] = @[rel]
 
 
-proc main(srcDir, destDir: string,production = false) =
-  let deps = getDeps()
+proc main(srcDir, destDir: string, production = false) =
+  let files = toSeq walkDirRec(srcDir)
+  let deps = getDeps(files)
   let notInstalled = deps.filterIt(not isInstalled(it))
   if notInstalled.len > 0:
     install(notInstalled)
@@ -84,7 +93,7 @@ proc main(srcDir, destDir: string,production = false) =
 
   debugEcho "manifest:" & $manifest
   debugEcho "ext table:" & $extTable
-  let productionFlag = if production : "-p" else : ""
+  let productionFlag = if production: "-p" else: ""
   for k, v in extTable:
     if k in ext2pro: # need process
       let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} {productionFlag} " & v.join(" "))
