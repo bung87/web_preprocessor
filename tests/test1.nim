@@ -20,12 +20,10 @@ suite "test basic":
     for f in files:
       writeFile(f, "")
   teardown:
-    # for f in files:
-    #   removeFile(f)
     removeDir(temp)
   test "can get list of extensions":
     check getExts(temp).sorted == @[".jpg", ".scss", ".png"].sorted
   test "can get list of pkgs":
-    check getDeps(temp).sorted == @["nim-sass"].sorted
+    check getDeps(temp).sorted == @["https://github.com/zacharycarter/nim-sass"].sorted
 
 
