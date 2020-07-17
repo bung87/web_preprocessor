@@ -27,7 +27,7 @@ proc getDeps*(dir: string = getCurrentDir()): seq[string] =
     if ext in pkgDeps:
       result.add pkgDeps[ext]
 
-proc getDeps*(files:seq[string]): seq[string] =
+proc getDeps*(files: seq[string]): seq[string] =
   ## get all dependencies throght files extensions.
   let exts = getExts(files)
   for ext in exts:
@@ -72,7 +72,7 @@ proc main(srcDir, destDir: string, production = false) =
   if not fileExists("manifest.json"):
     var f = open("manifest.json", fmWrite)
     var rel: string
-    for path in walkDirRec(srcDir):
+    for path in files:
       (dir, name, ext) = splitFile(path)
       rel = relativePath(path, getCurrentDir())
       processExtTable(extTable, ext, rel)
@@ -85,7 +85,7 @@ proc main(srcDir, destDir: string, production = false) =
     manifest = parseFile("manifest.json").to(Table[string, string])
     var fileChanged = newSeq[string]()
     var rel: string
-    for path in walkDirRec(srcDir):
+    for path in files:
       (dir, name, ext) = splitFile(path)
       rel = relativePath(path, getCurrentDir())
       if manifest[rel] != getMD5(readFile(path)):
