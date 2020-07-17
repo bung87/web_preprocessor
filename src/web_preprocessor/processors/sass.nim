@@ -3,13 +3,13 @@ import nim_sass
 import os
 import helper
 
-proc processFiles(src:string, dest:string; files:seq[string]){.prepareParams.} = 
+proc processFiles(src:string, dest:string; files:seq[string];production = false){.prepareParams.} = 
   var rel:string
   for file in files:
     var fileCtx: ptr Sass_File_Context = sass_make_file_context(file)
     let options = sass_file_context_get_options(fileCtx)
     sass_option_set_precision(options, 1)
-    sass_option_set_source_comments(options, true)
+    sass_option_set_source_comments(options, not production)
 
     sass_file_context_set_options(fileCtx, options)
 

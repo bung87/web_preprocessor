@@ -4,8 +4,8 @@ export sequtils
 
 macro prepareParams*(prc: untyped): untyped = 
   # Turn all path to absolute and create dest dir if not exists
-  # handle prc(src:string, dest:string; files:seq[string])
-  # prc(src, dest:string; files:seq[string])
+  # handle prc(src:string, dest:string; files:seq[string],production:bool)
+  # prc(src, dest:string; files:seq[string],production:bool)
   if prc.kind notin {nnkProcDef, nnkLambda, nnkMethodDef, nnkDo}:
     error("Cannot transform this node kind into an cached_property proc." &
           " proc/method definition or lambda node expected.")
@@ -14,11 +14,11 @@ macro prepareParams*(prc: untyped): untyped =
   var body = nnkStmtList.newTree()
   let paramsLen = prc.params.len
   var src,dest,files:NimNode
-  if paramsLen == 3:
+  if paramsLen == 4:
     src = prc.params[1][0]
     dest = prc.params[1][1]
     files = prc.params[2][0]
-  elif paramsLen == 4:
+  elif paramsLen == 5:
     src = prc.params[1][0]
     dest = prc.params[2][0]
     files = prc.params[3][0]

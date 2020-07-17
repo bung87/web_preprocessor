@@ -45,7 +45,7 @@ proc processExtTable(tbl: var Table[string, seq[string]], ext: string, rel: stri
     tbl[ext] = @[rel]
 
 
-proc main(srcDir, destDir: string) =
+proc main(srcDir, destDir: string,production = false) =
   let deps = getDeps()
   let notInstalled = deps.filterIt(not isInstalled(it))
   if notInstalled.len > 0:
@@ -84,10 +84,10 @@ proc main(srcDir, destDir: string) =
 
   debugEcho "manifest:" & $manifest
   debugEcho "ext table:" & $extTable
-
+  let productionFlag = if production : "-p" else : ""
   for k, v in extTable:
     if k in ext2pro: # need process
-      let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} " & v.join(" "))
+      let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} {productionFlag} " & v.join(" "))
       debugEcho output
   if currentSourcePath.parentDir().parentDir() == getCurrentDir():
     removeFile("manifest.json")
