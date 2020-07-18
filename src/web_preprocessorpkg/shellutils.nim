@@ -1,7 +1,13 @@
 import os
 import osproc
+import strutils
 
-const currentDir = currentSourcePath.parentDir()
+proc getCurrentPkgDir():string =
+  let cmd = "nimble path web_preprocessor"
+  let (output,exitCode) = execCmdEx( cmd )
+  if exitCode != 0:
+    quit "External command failed: " & cmd
+  output.strip
 
 proc exec*(cmd: string) =
   if os.execShellCmd(cmd) != 0:
@@ -14,12 +20,12 @@ proc toBin*( file: string):string =
     result = file.changeFileExt("")
 
 proc compileProjectFile*(file:string):string = 
-  let abs = currentDir / file
+  let abs = getCurrentPkgDir() / file
   result = toBin( abs )
   exec("nim c -d:release " & abs )
 
 proc runProcessor*(name:string,args:string): (string,int) =
-  let oName = currentDir / "processors" / name
+  let oName = getCurrentPkgDir() / "processors" / name
   let binName = toBin(oName)
   # os.execShellCmd( binName & " " & args)
   execCmdEx( binName & " " & args )
@@ -28,4 +34,4 @@ proc compileProcessor*(name:string ):string =
   compileProjectFile( "processors" / name & ".nim" )
 
 proc processorExists*(name:string):bool = 
-  fileExists( currentDir / "processors" / name )
+  fileExists( getCurrentPkgDir() / "processors" / name )
