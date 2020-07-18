@@ -2,10 +2,13 @@
 import nim_sass
 import os
 import helper
+import strutils
 
 proc processFiles(src:string, dest:string; files:seq[string];production = false){.prepareParams.} = 
   var rel:string
   for file in files:
+    if extractFilename(file).startsWith('_'):
+      continue
     var fileCtx: ptr Sass_File_Context = sass_make_file_context(file)
     let options = sass_file_context_get_options(fileCtx)
     sass_option_set_precision(options, 1)
@@ -29,6 +32,7 @@ proc processFiles(src:string, dest:string; files:seq[string];production = false)
     assert error_status == 0
     assert json_error.isNil
     rel = relativePath(file, src)
+    createDir(parentDir(dest / rel))
     writeFile( dest / rel.changeFileExt("css"), $output)
 
 when isMainModule:

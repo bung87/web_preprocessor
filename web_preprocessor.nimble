@@ -5,6 +5,7 @@ author        = "bung87"
 description   = "A new awesome nimble package"
 license       = "MIT"
 srcDir        = "src"
+installDirs   = @["web_preprocessorpkg/processors"]
 bin = @["web_preprocessor"]
 
 

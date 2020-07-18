@@ -3,9 +3,9 @@ import os
 import sequtils
 import strutils
 import algorithm
-import web_preprocessor/fileutils
-import web_preprocessor/shellutils
-import web_preprocessor/pkgutils
+import web_preprocessorpkg/fileutils
+import web_preprocessorpkg/shellutils
+import web_preprocessorpkg/pkgutils
 import strformat
 import json, md5
 
@@ -54,7 +54,7 @@ proc processExtTable(tbl: var Table[string, seq[string]], ext: string, rel: stri
 
 
 proc main(srcDir, destDir: string, production = false) =
-  let files = toSeq walkDirRec(srcDir)
+  let files = toSeq(walkDirRec(srcDir)).filterIt(splitFile(it)[2].len > 0)
   let deps = getDeps(files)
   let notInstalled = deps.filterIt(not isInstalled(it))
   if notInstalled.len > 0:
@@ -65,7 +65,6 @@ proc main(srcDir, destDir: string, production = false) =
   for name in names:
     if not processorExists(name):
       discard compileProcessor(name)
-  let srcDir = getCurrentDir() / "tests" / "static"
   var dir, name, ext: string
   var extTable: Table[string, seq[string]]
   var manifest: Table[string, string]

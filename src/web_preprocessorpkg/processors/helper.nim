@@ -25,7 +25,10 @@ macro prepareParams*(prc: untyped): untyped =
   let absDest = ident(dest.strVal)
   body.add newLetStmt(ident(src.strVal),newCall("absolutePath",src))
   body.add newLetStmt(absDest,newCall("absolutePath",dest))
-  body.add nnkDiscardStmt.newTree newCall("existsOrCreateDir",absDest)
+  # let stmt1 = newCall("createDir",ident"dir")
+  # let pars = newCall("parentDirs",newCall("parentDir",absDest),newLit(true))
+  body.add newCall("createDir",newCall("parentDir",absDest)) 
+  # body.add nnkForStmt.newTree(ident"dir", pars ,stmt1)
   body.add newLetStmt(ident(files.strVal), newCall("mapIt",files,newCall("absolutePath",ident"it")))
   for item in oldBody:
     body.add item
