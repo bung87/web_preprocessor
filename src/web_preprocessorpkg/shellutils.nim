@@ -7,7 +7,7 @@ proc getCurrentPkgDir():string =
   let (output,exitCode) = execCmdEx( cmd )
   if exitCode != 0:
     quit "External command failed: " & cmd
-  output.strip
+  output.strip / "web_preprocessorpkg"
 
 proc exec*(cmd: string) =
   if os.execShellCmd(cmd) != 0:
