@@ -93,10 +93,18 @@ proc main(srcDir, destDir: string, production = false) =
   debugEcho "manifest:" & $manifest
   debugEcho "ext table:" & $extTable
   let productionFlag = if production: "-p" else: ""
+  var rel:string
   for k, v in extTable:
     if k in ext2pro: # need process
       let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} {productionFlag} " & v.join(" "))
       debugEcho output
+    else:
+      for file in v:
+        if file.len == 0:
+          continue
+        rel = relativePath(file, srcDir)
+        createDir(parentDir(destDir / rel))
+        copyFile(file, destDir / rel )
   if currentSourcePath.parentDir().parentDir() == getCurrentDir():
     removeFile("manifest.json")
 
