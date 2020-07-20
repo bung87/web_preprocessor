@@ -8,3 +8,5 @@
 *.exe
 *.css
 manifest.json
+.DS_Store
+dest/

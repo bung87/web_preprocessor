@@ -14,11 +14,11 @@ export shellutils
 export pkgutils
 
 
-const pkgDeps = {".scss": @["https://github.com/zacharycarter/nim-sass"]}.toTable
+const pkgDeps = {".scss": @["https://github.com/zacharycarter/nim-sass"],".png": @["https://github.com/bung87/zopflipng"]}.toTable
 
-const dep2pro = {"nim_sass": "sass"}.toTable
+const dep2pro = {"nim_sass": "sass","zopflipng": "png"}.toTable
 
-const ext2pro = {".scss": "sass"}.toTable
+const ext2pro = {".scss": "sass",".png": "png"}.toTable
 
 proc getDeps*(dir: string = getCurrentDir()): seq[string] =
   ## get all dependencies throght files extensions.
@@ -93,7 +93,7 @@ proc main(srcDir, destDir: string, production = false) =
   debugEcho "manifest:" & $manifest
   debugEcho "ext table:" & $extTable
   let productionFlag = if production: "-p" else: ""
-  var rel:string
+  var rel: string
   for k, v in extTable:
     if k in ext2pro: # need process
       let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} {productionFlag} " & v.join(" "))
@@ -104,7 +104,7 @@ proc main(srcDir, destDir: string, production = false) =
           continue
         rel = relativePath(file, srcDir)
         createDir(parentDir(destDir / rel))
-        copyFile(file, destDir / rel )
+        copyFile(file, destDir / rel)
   if currentSourcePath.parentDir().parentDir() == getCurrentDir():
     removeFile("manifest.json")
 

@@ -24,6 +24,6 @@ suite "test basic":
   test "can get list of extensions":
     check getExts(temp).sorted == @[".jpg", ".scss", ".png"].sorted
   test "can get list of pkgs":
-    check getDeps(temp).sorted == @["https://github.com/zacharycarter/nim-sass"].sorted
+    check getDeps(temp).sorted == @["https://github.com/zacharycarter/nim-sass","https://github.com/bung87/zopflipng"].sorted
 
 
