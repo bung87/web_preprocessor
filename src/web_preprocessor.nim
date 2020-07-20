@@ -14,11 +14,12 @@ export shellutils
 export pkgutils
 
 
-const pkgDeps = {".scss": @["https://github.com/zacharycarter/nim-sass"],".png": @["https://github.com/bung87/zopflipng"]}.toTable
+const pkgDeps = {".scss": @["https://github.com/zacharycarter/nim-sass"], ".png": @[
+    "https://github.com/bung87/zopflipng"]}.toTable
 
-const dep2pro = {"nim_sass": "sass","zopflipng": "png"}.toTable
+const dep2pro = {"nim_sass": "sass", "zopflipng": "png"}.toTable
 
-const ext2pro = {".scss": "sass",".png": "png"}.toTable
+const ext2pro = {".scss": "sass", ".png": "png"}.toTable
 
 proc getDeps*(dir: string = getCurrentDir()): seq[string] =
   ## get all dependencies throght files extensions.
