@@ -16,11 +16,11 @@ export pkgutils
 const jpgDeps = ["https://github.com/bung87/mozjpeg"]
 
 const pkgDeps = {".scss": @["https://github.com/zacharycarter/nim-sass"], ".png": @[
-    "https://github.com/bung87/zopflipng"],".jpg": @jpgDeps ,".jpeg": @jpgDeps}.toTable
+    "https://github.com/bung87/zopflipng"], ".jpg": @jpgDeps, ".jpeg": @jpgDeps}.toTable
 
-const dep2pro = {"nim_sass": "sass", "zopflipng": "png","mozjpeg": "jpeg"}.toTable
+const dep2pro = {"nim_sass": "sass", "zopflipng": "png", "mozjpeg": "jpeg"}.toTable
 
-const ext2pro = {".scss": "sass", ".png": "png",".jpeg": "jpeg",".jpg": "jpeg"}.toTable
+const ext2pro = {".scss": "sass", ".png": "png", ".jpeg": "jpeg", ".jpg": "jpeg"}.toTable
 
 proc getDeps*(dir: string = getCurrentDir()): seq[string] =
   ## get all dependencies throght files extensions.
