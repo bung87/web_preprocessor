@@ -8,12 +8,12 @@ web assets preprocessor compile sass,optimize png,optimize jpg
 `nimble install https://github.com/bung87/web_preprocessor`  
 
 
-## dependencies  
+## Dependencies  
 
-Automatically install dependencies when `web_preprocessor` find specific file extensions  
+Automatically install dependencies( only nimble packages, shared libraries need install by yourself) when `web_preprocessor` find specific file extensions  
 
-sass compilation requires `libsass` shared library  
-jpg optimization requires `mozjpeg` shared library  
+sass compilation requires [libsass](https://github.com/sass/libsass) shared library  
+jpg optimization requires [mozjpeg](https://github.com/mozilla/mozjpeg) shared library  
 png optimization dependencies are all in pure Nim 
 
 ## Usage  
