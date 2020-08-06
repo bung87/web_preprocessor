@@ -29,7 +29,7 @@ macro prepareParams*(prc: untyped): untyped =
   # let pars = newCall("parentDirs",newCall("parentDir",absDest),newLit(true))
   body.add newCall("createDir",newCall("parentDir",absDest)) 
   # body.add nnkForStmt.newTree(ident"dir", pars ,stmt1)
-  body.add newLetStmt(ident(files.strVal), newCall("mapIt",files,newCall("absolutePath",ident"it",src)))
+  body.add newLetStmt(ident(files.strVal), newCall("mapIt",files,newCall("absolutePath",ident"it")))
   for item in oldBody:
     body.add item
   result.body = body
