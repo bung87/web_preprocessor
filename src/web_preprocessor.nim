@@ -22,6 +22,10 @@ const dep2pro = {"nim_sass": "sass", "zopflipng": "png", "mozjpeg": "jpeg"}.toTa
 
 const ext2pro = {".scss": "sass", ".png": "png", ".jpeg": "jpeg", ".jpg": "jpeg"}.toTable
 
+template debugLog(body) = 
+  when not defined(release):
+    debugEcho body
+
 proc getDeps*(dir: string = getCurrentDir()): seq[string] =
   ## get all dependencies throght files extensions.
   let exts = getExts(dir)
@@ -61,7 +65,7 @@ proc main(srcDir, destDir: string, production = false) =
   let notInstalled = deps.filterIt(not isInstalled(it))
   if notInstalled.len > 0:
     install(notInstalled)
-  debugEcho "not installed:" & $notInstalled
+  debugLog "not installed:" & $notInstalled
   let namedDeps = deps.mapIt(pathToValidPackageName(it))
   let names = namedDeps.mapIt(dep2pro[it])
   for name in names:
@@ -95,14 +99,16 @@ proc main(srcDir, destDir: string, production = false) =
       else:
         processExtTable(extTable, ext, rel)
 
-  debugEcho "manifest:" & $manifest
-  debugEcho "ext table:" & $extTable
+  debugLog "manifest:" & $manifest
+  debugLog "ext table:" & $extTable
   let productionFlag = if production: "-p" else: ""
   var rel: string
   for k, v in extTable:
     if k in ext2pro: # need process
       let (output, exitCode) = runProcessor(ext2pro[k], &"-s {srcDir} -d {destDir} {productionFlag} " & v.join(" "))
-      debugEcho output
+      debugLog output
+      if exitCode != 0:
+        stderr.write output
     else:
       for file in v:
         if file.len == 0:

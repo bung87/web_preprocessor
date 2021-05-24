@@ -3,6 +3,9 @@ import nim_sass
 import os
 import helper
 import strutils
+template debugLog(body) = 
+  when not defined(release):
+    debugEcho body
 
 proc processFiles(src:string, dest:string; files:seq[string];production = false){.prepareParams.} = 
   var rel:string
@@ -32,7 +35,7 @@ proc processFiles(src:string, dest:string; files:seq[string];production = false)
     # Retrieve errors during compilation
     error_status = sass_context_get_error_status(ctx)
     json_error = sass_context_get_error_json(ctx)
-    debugEcho json_error
+    stderr.write json_error
     # Release memory dedicated to the C compiler
     sass_delete_compiler(compiler)
 
