@@ -89,7 +89,10 @@ proc main(srcDir, destDir: string, production = false) =
     for path in files:
       (dir, name, ext) = splitFile(path)
       rel = relativePath(path, getCurrentDir())
-      if manifest[rel] != getMD5(readFile(path)):
+      if manifest.hasKey(rel):
+        if manifest[rel] != getMD5(readFile(path)):
+          processExtTable(extTable, ext, rel)
+      else:
         processExtTable(extTable, ext, rel)
 
   debugEcho "manifest:" & $manifest
